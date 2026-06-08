@@ -50,7 +50,6 @@ venv\Scripts\activate
 
 The model is stored in a compressed file: `trained_model.7z`.
 
-#### Option A (recommended - terminal only)
 
 ```bash
 pip install py7zr
@@ -61,17 +60,6 @@ Then extract:
 ```bash
 python -c "import py7zr; py7zr.SevenZipFile('trained_model.7z','r').extractall('.')"
 ```
-
-✔ This will generate:
-```
-trained_model.pkl
-```
-
----
-
-#### Option B (manual)
-- Install 7-Zip: https://www.7-zip.org/
-- Right click → Extract Here
 
 ---
 
