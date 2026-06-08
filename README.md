@@ -43,7 +43,10 @@ Activate it:
 ```bash
 venv\Scripts\activate
 ```
-
+**macOS / Linux**
+```bash
+source venv/bin/activate
+```
 ---
 
 ### Step 3 – Extract the trained model (terminal method)
