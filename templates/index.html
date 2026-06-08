@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Rating Prediction</title>
+
+    <style>
+        body {
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            background-color: #bfe7ff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 35px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #0b1f4d;
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            font-weight: normal;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            font-weight: normal;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            background-color: #e6d6f5;
+            border: 1px solid #b59ad6;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: "Trebuchet MS", Arial, sans-serif;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 12px 24px;
+            background-color: #d8c2eb;
+            border: none;
+            border-radius: 10px;
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #c6a8df;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .stars {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 24px;
+            letter-spacing: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Average Rating Prediction</h1>
+
+        <p>Insert movie details</p>
+
+        <form id="predictionForm">
+
+            <div class="form-group">
+                <label for="tconst">Movie's IMDb ID (optional):</label>
+                <input
+                    type="text"
+                    id="tconst"
+                    name="tconst"
+                    placeholder="Example: tt1234567"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="startYear">Release year:</label>
+                <input
+                    type="number"
+                    id="startYear"
+                    name="startYear"
+                    placeholder="Example: 2019"
+                    min="1"
+                    max="2025"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="Country">
+                    Production country, separated by commas if needed:
+                </label>
+                <input
+                    type="text"
+                    id="Country"
+                    name="Country"
+                    placeholder="Example: USA,France,India"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="genres">
+                    Genres, separated by commas if needed:
+                </label>
+                <input
+                    type="text"
+                    id="genres"
+                    name="genres"
+                    placeholder="Example: Drama,Action"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="runtimeMinutes">Runtime in minutes:</label>
+                <input
+                    type="number"
+                    id="runtimeMinutes"
+                    name="runtimeMinutes"
+                    placeholder="Example: 120"
+                    min="1"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="lead_actors_ids">
+                    IMDb IDs of the lead actors, separated by commas if needed:
+                </label>
+                <input
+                    type="text"
+                    id="lead_actors_ids"
+                    name="lead_actors_ids"
+                    placeholder="Example: nm0000123,nm0000456"
+                >
+            </div>
+
+            <button type="submit">
+                Predict Rating
+            </button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document
+            .getElementById('predictionForm')
+            .addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'none';
+
+                const formData = {
+                    tconst: document.getElementById('tconst').value,
+                    startYear: parseInt(
+                        document.getElementById('startYear').value
+                    ),
+                    Country: document.getElementById('Country').value,
+                    genres: document.getElementById('genres').value,
+                    runtimeMinutes: parseInt(
+                        document.getElementById('runtimeMinutes').value
+                    ),
+                    lead_actors_ids:
+                        document.getElementById('lead_actors_ids').value
+                };
+
+                try {
+                    const response = await fetch('/predict', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        const rating = result.predicted_rating;
+                        const roundedRating = Math.round(rating);
+                        const fullStars = '⭐️'.repeat(roundedRating);
+
+                        resultDiv.className = 'success';
+                        resultDiv.innerHTML = `
+                            <div>Predicted Rating: ${rating} / 10</div>
+                            <div class="stars">${fullStars}</div>
+                        `;
+                    } else {
+                        resultDiv.className = 'error';
+                        resultDiv.innerText = `Error: ${result.error}`;
+                    }
+                } catch (error) {
+                    resultDiv.className = 'error';
+                    resultDiv.innerText =
+                        'Unable to connect to the server. Make sure the Flask server is running.';
+                }
+
+                resultDiv.style.display = 'block';
+            });
+    </script>
+
+</body>
+
+</html>
