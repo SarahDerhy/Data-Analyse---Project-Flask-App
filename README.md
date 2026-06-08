@@ -65,12 +65,6 @@ Before running the application, you must extract the compressed model file:
 7z x trained_model.7z
 ```
 
-This will generate:
-
-```
-trained_model.pkl
-```
-
 ⚠️ If `7z` is not installed:
 
 ```bash
