@@ -1,4 +1,3 @@
-````markdown
 # Movie Rating Predictor 🎬
 
 ## 1. Project Description
@@ -6,12 +5,13 @@ This project is the third and final part of a series of assignments on machine l
 
 In Part 2, we built and trained a machine learning model to predict the average IMDb rating of movies. We developed a `prepare_data()` function that handles all the feature engineering and preprocessing steps required before feeding data into the model.
 
-In this part, we wrapped that model into a functional Flask web application. The user can fill in a form with movie details, and the app returns a predicted IMDb rating in real time. The app uses the same `prepare_data()` pipeline used during training, then passes the processed data to the trained model to generate the prediction.
+In this part, we wrapped that model into a functional Flask web application. The user can fill in a form with movie details, and the app returns a predicted IMDb rating in real time.
 
 ---
 
 ## 2. Team Members
 | Name | ID |
+|------|------|
 | Sarah Derhy | 340889435 |
 | Shirel Amar | 207065103 |
 
@@ -20,23 +20,19 @@ In this part, we wrapped that model into a functional Flask web application. The
 ## 3. Installation
 
 ### Prerequisite
-Python 3.10 or later must be installed.  
-Recommended version: Python 3.12.
+- Python 3.10 or later (recommended: Python 3.12)
 
 ---
 
 ### Step 1 – Clone the repository
-Open the terminal in VS Code (New Terminal), then run:
-
 ```bash
 git clone https://github.com/SarahDerhy/Data-Analyse---Project-Flask-App
 cd Data-Analyse---Project-Flask-App
-````
+```
 
 ---
 
-### Step 2 – Create a virtual environment
-
+### Step 2 – Create virtual environment
 ```bash
 python -m venv venv
 ```
@@ -44,64 +40,56 @@ python -m venv venv
 Activate it:
 
 **Windows**
-
 ```bash
 venv\Scripts\activate
 ```
 
-**macOS / Linux**
+---
+
+### Step 3 – Extract the trained model (terminal method)
+
+The model is stored in a compressed file: `trained_model.7z`.
+
+#### Option A (recommended - terminal only)
 
 ```bash
-source venv/bin/activate
+pip install py7zr
+```
+
+Then extract:
+
+```bash
+python -c "import py7zr; py7zr.SevenZipFile('trained_model.7z','r').extractall('.')"
+```
+
+✔ This will generate:
+```
+trained_model.pkl
 ```
 
 ---
 
-### Step 3 – Extract the trained model
-
-Before running the application, you must extract the compressed model file:
-
-```bash
-7z x trained_model.7z
-```
-
-⚠️ If `7z` is not installed:
-
-```bash
-brew install p7zip
-```
+#### Option B (manual)
+- Install 7-Zip: https://www.7-zip.org/
+- Right click → Extract Here
 
 ---
 
 ### Step 4 – Install dependencies
-
 ```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 4. Running the Server
-
-Make sure the virtual environment is active, then run:
-
+## 4. Run the server
 ```bash
 python api.py
 ```
 
 ---
 
-## ⚠️ Note
-
-An internet connection is required when the app processes its first prediction, because the IMDb crew dataset is downloaded from the official IMDb datasets website.
-The first prediction may take longer than the following ones.
-
----
-
-## 5. Accessing the App
-
-Open your browser at:
-
+## 5. Open the app
 http://127.0.0.1:5000
 
 ---
@@ -111,14 +99,13 @@ http://127.0.0.1:5000
 All input fields are optional. Users may provide only the information available to them. Missing values are handled by the preprocessing pipeline. However, providing more information may improve the relevance of the prediction.
 
 | Field                      | Description                        | Expected values                                                               |
-| -------------------------- | ---------------------------------- | ----------------------------------------------------------------------------- |
-| tconst (optional)          | IMDb identifier                    | Format: tt followed by digits (example: tt1234567)                            |
-| startYear (optional)       | Year the movie was released        | Number between 1 and 2025 (example: 2019)                                     |
-| Country (optional)         | Country or countries of production | Country name(s), comma-separated (example: USA or France,India)               |
-| genres (optional)          | Genre or genres of the movie       | Genre name(s), comma-separated (example: Drama or Drama,Action)               |
-| runtimeMinutes (optional)  | Total runtime in minutes           | Positive integer (example: 120)                                               |
-| lead_actors_ids (optional) | IMDb IDs of the lead actors        | Format: nm followed by digits, comma-separated (example: nm0000123,nm0000456) |
+|---------------------------|------------------------------------|------------------------------------------------------------------------------|
+| tconst (optional)         | IMDb identifier                    | Format: tt followed by digits (example: tt1234567)                          |
+| startYear (optional)      | Year the movie was released        | Number between 1 and 2025 (example: 2019)                                    |
+| Country (optional)        | Country or countries of production | Country name(s), comma-separated (example: USA or France,India)             |
+| genres (optional)         | Genre or genres of the movie       | Genre name(s), comma-separated (example: Drama or Drama,Action)             |
+| runtimeMinutes (optional) | Total runtime in minutes           | Positive integer (example: 120)                                             |
+| lead_actors_ids (optional)| IMDb IDs of the lead actors        | Format: nm followed by digits, comma-separated (example: nm0000123,nm0000456) |
 
-```
-
+---
 
